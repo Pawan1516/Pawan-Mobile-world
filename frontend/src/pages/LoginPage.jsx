@@ -4,8 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 import { FiUser, FiLock, FiSmartphone } from 'react-icons/fi';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [roleMode, setRoleMode] = useState('admin'); // 'admin' or 'staff'
 
   const { login, user, loading } = useContext(AuthContext);
@@ -40,13 +40,13 @@ const LoginPage = () => {
           {/* Tabs */}
           <div className="flex bg-black/20 p-1 rounded-2xl mb-8 border border-white/5">
             <button
-              onClick={() => { setRoleMode('admin'); setUsername('admin'); setPassword('admin123'); }}
+              onClick={() => { setRoleMode('admin'); }}
               className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${roleMode === 'admin' ? 'bg-gradient-to-r from-[#00d4ff] to-[#004aaa] text-white shadow-lg' : 'text-white/40 hover:text-white/60'}`}
             >
               Admin
             </button>
             <button
-              onClick={() => { setRoleMode('staff'); setUsername('staff'); setPassword('staff123'); }}
+              onClick={() => { setRoleMode('staff'); }}
               className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${roleMode === 'staff' ? 'bg-gradient-to-r from-[#00d4ff] to-[#004aaa] text-white shadow-lg' : 'text-white/40 hover:text-white/60'}`}
             >
               Staff
