@@ -41,35 +41,9 @@ export const sendBillOnWhatsApp = async (phone, billData, settings) => {
   const formattedPhone = phone ? phone.replace(/\D/g, '') : '';
   const fullPhone = formattedPhone.length === 10 ? `91${formattedPhone}` : formattedPhone;
 
-  // 1. First, always trigger the PDF download locally for record Keeping
-  const pdfBlob = generateBillPDF(billData, settings, 'blob');
+  // 1. Trigger the PDF download locally for record keeping
+  generateBillPDF(billData, settings, true);
   
-  // 2. Try to Share the PDF File Directly (Best for Mobile)
-  if (navigator.share && navigator.canShare) {
-    try {
-      const safeBillNo = String(billData?.billNo || 'N/A');
-      const safeName = String(billData?.customerName || 'Customer');
-      const fileName = `Bill_${safeBillNo}_${safeName.replace(/\s+/g, '_')}.pdf`;
-      const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
-      if (navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          title: `Bill from ${settings?.shopName || 'Pavan Mobile World'}`,
-          text: msg,
-          files: [file]
-        });
-        return; // Successfully shared using system dialog
-      }
-    } catch (err) {
-      console.log('Sharing failed', err);
-    }
-  }
-
-  // 3. Fallback: If sharing files is not supported (e.g. Chrome on Desktop)
-  // We trigger the local download and open WhatsApp Web with the text bill
-  generateBillPDF(billData, settings, true); // Download trigger
-  
-  setTimeout(() => {
-    window.open(`https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`, '_blank');
-  }, 500);
+  // 2. Open WhatsApp chat directly with the Bill Link message
+  window.open(`https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`, '_blank');
 };
