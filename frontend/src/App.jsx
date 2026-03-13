@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { BillingProvider } from './context/BillingContext';
 import Layout from './components/layout/Layout';
 import LoginPage from './pages/LoginPage';
+import ViewBillPage from './pages/ViewBillPage';
 import DashboardPage from './pages/DashboardPage';
 import BillingPage from './pages/BillingPage';
 import ProductsPage from './pages/ProductsPage';
@@ -17,6 +18,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/view-bill/:id" element={<ViewBillPage />} />
             
             <Route path="/" element={<Layout title="Dashboard" />}>
               <Route index element={<Navigate to="/dashboard" replace />} />

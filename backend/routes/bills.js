@@ -10,7 +10,7 @@ const { protect, adminOnly } = require('../middleware/auth');
 
 router.get('/', protect, adminOnly, getBills);
 router.get('/export/csv', protect, adminOnly, exportCSV);
-router.get('/:id', protect, getBillById);
+router.get('/:id', getBillById);
 router.post('/', protect, createBill);
 
 module.exports = router;
