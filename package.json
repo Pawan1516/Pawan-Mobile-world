@@ -1,6 +1,11 @@
 {
   "name": "pavan-mobile-world-root",
   "private": true,
+  "scripts": {
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "start-backend": "cd backend && npm start",
+    "build-frontend": "cd frontend && npm install && npm run build"
+  },
   "engines": {
     "node": ">=18.0.0"
   }
