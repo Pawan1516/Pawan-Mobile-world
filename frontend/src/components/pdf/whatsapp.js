@@ -30,7 +30,6 @@ export const buildWhatsAppMessage = (billData, settings) => {
   if (discount > 0) msg += `🔻 *Discount:* -₹${discount.toFixed(2)}\n`;
   msg += `✅ *TOTAL AMOUNT: ₹${total.toFixed(2)}*\n`;
   msg += `━━━━━━━━━━━━━━━━━━\n`;
-  msg += `🔗 *View/Download PDF:* https://pawan-mobile-world.vercel.app/view-bill/${billData._id || 'id'}\n`;
   msg += `_${billFooter}_`;
   
   return msg;
