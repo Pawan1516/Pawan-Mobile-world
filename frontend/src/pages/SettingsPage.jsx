@@ -14,14 +14,22 @@ const SettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  const [services, setServices] = useState([]);
   const [showUserModal, setShowUserModal] = useState(false);
+  const [showServiceModal, setShowServiceModal] = useState(false);
   const [userFormData, setUserFormData] = useState({
     id: null, name: '', username: '', password: '', role: 'staff'
+  });
+  const [serviceFormData, setServiceFormData] = useState({
+    id: null, name: '', price: 0, costPrice: 0, warranty: 'No Warranty', category: 'Repair'
   });
 
   useEffect(() => {
     fetchSettings();
-    if (isAdmin()) fetchUsers();
+    if (isAdmin()) {
+      fetchUsers();
+      fetchServices();
+    }
   }, [isAdmin]);
 
   const fetchSettings = async () => {
@@ -41,6 +49,15 @@ const SettingsPage = () => {
       setUsers(data);
     } catch (err) {
       toast.error('Failed to fetch users');
+    }
+  };
+
+  const fetchServices = async () => {
+    try {
+      const { data } = await axios.get('/services');
+      setServices(data);
+    } catch (err) {
+      toast.error('Failed to fetch services');
     }
   };
 
@@ -105,6 +122,50 @@ const SettingsPage = () => {
       fetchUsers();
     } catch (err) {
       toast.error('Failed to delete user');
+    }
+  };
+
+  const handleOpenServiceModal = (service = null) => {
+    if (service) {
+      setServiceFormData({
+        id: service._id,
+        name: service.name,
+        price: service.price,
+        costPrice: service.costPrice || 0,
+        warranty: service.warranty || 'No Warranty',
+        category: service.category || 'Repair'
+      });
+    } else {
+      setServiceFormData({ id: null, name: '', price: 0, costPrice: 0, warranty: 'No Warranty', category: 'Repair' });
+    }
+    setShowServiceModal(true);
+  };
+
+  const handleSaveService = async (e) => {
+    e.preventDefault();
+    try {
+      if (serviceFormData.id) {
+        await axios.put(`/services/${serviceFormData.id}`, serviceFormData);
+        toast.success('Service updated!');
+      } else {
+        await axios.post('/services', serviceFormData);
+        toast.success('Service created!');
+      }
+      setShowServiceModal(false);
+      fetchServices();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to save service');
+    }
+  };
+
+  const handleDeleteService = async (id) => {
+    if (!window.confirm('Delete this service?')) return;
+    try {
+      await axios.delete(`/services/${id}`);
+      toast.success('Service removed');
+      fetchServices();
+    } catch (err) {
+      toast.error('Failed to delete service');
     }
   };
 
@@ -320,6 +381,46 @@ const SettingsPage = () => {
          </div>
        </div>
 
+      {/* Service Management Section */}
+      <div className="bg-[#121d30] border border-white/5 p-8 rounded-[2.5rem] shadow-xl xl:col-span-2">
+         <div className="flex items-center justify-between mb-8">
+            <h3 className="text-sm font-black uppercase tracking-widest text-[#00d4ff] flex items-center gap-2">
+              <FiLayout /> Predefined Services & Repairs
+            </h3>
+            <button 
+              onClick={() => handleOpenServiceModal()}
+              className="bg-[#00d4ff]/10 text-[#00d4ff] px-4 py-2 rounded-xl border border-[#00d4ff]/20 text-xs font-black uppercase tracking-tighter hover:bg-[#00d4ff]/20 transition-all flex items-center gap-2"
+            >
+              <FiPlus /> New Service
+            </button>
+         </div>
+
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {services.map(s => (
+              <div key={s._id} className="p-4 bg-black/20 rounded-2xl border border-white/5 flex items-center justify-between group hover:border-[#00d4ff]/20 transition-all">
+                <div>
+                  <p className="font-bold text-white/80">{s.name}</p>
+                  <p className="text-[10px] text-white/20 uppercase font-black">₹{s.price} • {s.warranty}</p>
+                </div>
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button 
+                    onClick={() => handleOpenServiceModal(s)}
+                    className="p-2 rounded-lg bg-white/5 text-white/40 hover:text-[#00d4ff] transition-all"
+                  >
+                    <FiSettings size={14} />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteService(s._id)}
+                    className="p-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all"
+                  >
+                    <FiTrash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            ))}
+         </div>
+      </div>
+
       {/* User Modal */}
       {showUserModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-md bg-black/60 animate-in fade-in duration-300">
@@ -404,6 +505,104 @@ const SettingsPage = () => {
                    className="bg-gradient-to-r from-[#004aaa] to-[#00d4ff] text-white px-8 py-3 rounded-2xl font-black shadow-xl shadow-[#00d4ff]/20 active:scale-95 transition-all"
                  >
                    SAVE USER
+                 </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Service Modal */}
+      {showServiceModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-md bg-black/60 animate-in fade-in duration-300">
+          <div className="bg-[#121d30] border border-white/10 w-full max-w-md rounded-[3rem] shadow-2xl overflow-hidden animate-in slide-in-from-bottom-8 duration-500">
+            <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+              <h3 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
+                <FiLayout className="text-[#00d4ff]" />
+                {serviceFormData.id ? 'Edit Service' : 'Add New Service'}
+              </h3>
+              <button 
+                type="button" 
+                onClick={() => setShowServiceModal(false)}
+                className="w-10 h-10 rounded-full bg-white/5 text-white/40 hover:text-white flex items-center justify-center transition-colors"
+               >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveService} className="p-8 space-y-5">
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Service Name</label>
+                <input
+                  type="text"
+                  required
+                  value={serviceFormData.name}
+                  onChange={e => setServiceFormData({ ...serviceFormData, name: e.target.value })}
+                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
+                  placeholder="E.g. Screen Replacement"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Selling Price (₹)</label>
+                  <input
+                    type="number"
+                    required
+                    value={serviceFormData.price}
+                    onChange={e => setServiceFormData({ ...serviceFormData, price: parseFloat(e.target.value) || 0 })}
+                    className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Cost Price (₹)</label>
+                  <input
+                    type="number"
+                    value={serviceFormData.costPrice}
+                    onChange={e => setServiceFormData({ ...serviceFormData, costPrice: parseFloat(e.target.value) || 0 })}
+                    className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
+                  />
+                </div>
+              </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Category</label>
+                  <select
+                    value={serviceFormData.category}
+                    onChange={e => setServiceFormData({ ...serviceFormData, category: e.target.value })}
+                    className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
+                  >
+                    <option value="Repair">Repair</option>
+                    <option value="Service">Service</option>
+                    <option value="Installation">Installation</option>
+                    <option value="Software">Software</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Warranty</label>
+                  <input
+                    type="text"
+                    value={serviceFormData.warranty}
+                    onChange={e => setServiceFormData({ ...serviceFormData, warranty: e.target.value })}
+                    className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
+                    placeholder="E.g. 6 Months"
+                  />
+                </div>
+
+              <div className="pt-4 flex justify-end gap-3">
+                 <button 
+                   type="button" 
+                   onClick={() => setShowServiceModal(false)}
+                   className="px-6 py-3 rounded-2xl text-sm font-bold text-white/40 hover:text-white transition-colors"
+                 >
+                   CANCEL
+                 </button>
+                 <button 
+                   type="submit" 
+                   className="bg-gradient-to-r from-[#004aaa] to-[#00d4ff] text-white px-8 py-3 rounded-2xl font-black shadow-xl shadow-[#00d4ff]/20 active:scale-95 transition-all"
+                 >
+                   SAVE SERVICE
                  </button>
               </div>
             </form>

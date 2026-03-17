@@ -21,6 +21,7 @@ const BillingPage = () => {
   } = useContext(BillingContext);
 
   const [products, setProducts] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState('');
@@ -29,6 +30,7 @@ const BillingPage = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchServices();
     fetchSettings();
   }, []);
 
@@ -52,14 +54,33 @@ const BillingPage = () => {
     }
   };
 
+  const fetchServices = async () => {
+    try {
+      const { data } = await axios.get('/services');
+      setServices(data);
+    } catch (err) {
+      toast.error('Failed to fetch services');
+    }
+  };
+
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = category === 'All' || p.category === category;
     return matchesSearch && matchesCategory;
   });
 
-  const handleAddCustomItem = () => {
-    setCustomItems([...customItems, { name: '', qty: 1, price: 0, total: 0, warranty: 'No Warranty' }]);
+  const handleAddCustomItem = (service = null) => {
+    if (service) {
+      setCustomItems([...customItems, { 
+        name: service.name, 
+        qty: 1, 
+        price: service.price, 
+        total: service.price, 
+        warranty: service.warranty || 'No Warranty' 
+      }]);
+    } else {
+      setCustomItems([...customItems, { name: '', qty: 1, price: 0, total: 0, warranty: 'No Warranty' }]);
+    }
   };
 
   const updateCustomItem = (index, field, value) => {
@@ -244,19 +265,36 @@ const BillingPage = () => {
         <div className="bg-[#121d30] border border-white/5 p-6 rounded-3xl shadow-xl">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-black uppercase tracking-widest text-[#00d4ff] flex items-center gap-2">
-              <FiPlusCircle /> Services & Custom Items
+              <FiPlusCircle /> Services & Repairs
             </h3>
-            <button 
-              onClick={handleAddCustomItem}
-              className="text-xs font-bold bg-[#00d4ff]/10 text-[#00d4ff] px-3 py-1.5 rounded-lg border border-[#00d4ff]/20 hover:bg-[#00d4ff]/20 transition-all flex items-center gap-2"
-            >
-              <FiPlus /> Add Item
-            </button>
+            <div className="flex gap-2">
+              <select 
+                className="bg-black/30 border border-white/5 rounded-lg text-[10px] px-2 py-1 text-white/60 focus:outline-none"
+                onChange={(e) => {
+                  const s = services.find(srv => srv._id === e.target.value);
+                  if (s) {
+                    handleAddCustomItem(s);
+                    e.target.value = "";
+                  }
+                }}
+              >
+                <option value="">Quick Add Service</option>
+                {services.map(s => (
+                  <option key={s._id} value={s._id}>{s.name} (₹{s.price})</option>
+                ))}
+              </select>
+              <button 
+                onClick={() => handleAddCustomItem()}
+                className="text-xs font-bold bg-[#00d4ff]/10 text-[#00d4ff] px-3 py-1.5 rounded-lg border border-[#00d4ff]/20 hover:bg-[#00d4ff]/20 transition-all flex items-center gap-2"
+              >
+                <FiPlus /> Custom
+              </button>
+            </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             {customItems.map((item, index) => (
-              <div key={index} className="flex gap-4 items-end animate-in fade-in slide-in-from-left-4">
+              <div key={index} className="flex gap-4 items-end animate-in fade-in slide-in-from-left-4 bg-white/[0.02] p-3 rounded-2xl border border-white/5">
                 <div className="flex-[2] space-y-1">
                   <label className="text-[9px] font-black text-white/20 uppercase ml-1">Service / Item Name</label>
                   <input
@@ -304,7 +342,7 @@ const BillingPage = () => {
               </div>
             ))}
             {customItems.length === 0 && (
-              <p className="text-center py-4 text-white/10 text-xs italic">No custom items added</p>
+              <p className="text-center py-4 text-white/10 text-xs italic">No custom items or services added</p>
             )}
           </div>
         </div>

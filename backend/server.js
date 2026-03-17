@@ -9,6 +9,7 @@ const productRoutes = require('./routes/products');
 const billRoutes = require('./routes/bills');
 const dashboardRoutes = require('./routes/dashboard');
 const settingsRoutes = require('./routes/settings');
+const serviceRoutes = require('./routes/services');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/bills', billRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/services', serviceRoutes);
 
 app.get('/', (req, res) => res.send('Pavan Mobile World API is running...'));
 

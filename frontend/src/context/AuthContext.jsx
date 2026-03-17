@@ -18,6 +18,37 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
+  // Auto Logout Logic (30 Minutes Inactivity)
+  useEffect(() => {
+    let inactivityTimer;
+
+    const resetTimer = () => {
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      if (user) {
+        inactivityTimer = setTimeout(() => {
+          logout();
+          toast.error('Session expired due to inactivity. Please login again.');
+        }, 30 * 60 * 1000); // 30 Minutes
+      }
+    };
+
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    
+    if (user) {
+      resetTimer();
+      activityEvents.forEach(event => {
+        window.addEventListener(event, resetTimer);
+      });
+    }
+
+    return () => {
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      activityEvents.forEach(event => {
+        window.removeEventListener(event, resetTimer);
+      });
+    };
+  }, [user]);
+
   const login = async (username, password) => {
     setLoading(true);
     try {
