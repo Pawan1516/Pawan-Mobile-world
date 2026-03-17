@@ -114,7 +114,7 @@ const ProductsPage = () => {
   return (
     <div className="space-y-10 animate-slide-up font-outfit">
       {/* Search and Control Hub */}
-      <div className="glass-panel p-10 lg:p-12 rounded-[4rem] shadow-2xl relative overflow-hidden group border-white/[0.03]">
+      <div className="bg-white p-10 lg:p-12 rounded-[4rem] shadow-xl relative overflow-hidden group border border-gray-100 hover:bg-gray-50/50 transition-all duration-1000">
         <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
            <FiBox size={180} />
         </div>
@@ -122,13 +122,13 @@ const ProductsPage = () => {
         <div className="flex flex-col xl:flex-row gap-10 items-center justify-between relative z-10">
           <div className="flex flex-col md:flex-row gap-6 flex-1 w-full">
             <div className="relative flex-1 group/search">
-              <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/search:text-sky-400 transition-colors duration-500" />
+              <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/search:text-sky-500 transition-colors duration-500" />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="premium-input w-full pl-16 py-5 bg-slate-950/40 border-slate-800 focus:bg-slate-950/60 text-sm font-bold tracking-wide"
-                placeholder="Locate Assets (Name/SKU/Code)..."
+                className="premium-input w-full pl-16 py-5 bg-gray-50 border-gray-100 focus:bg-white text-gray-800 text-sm font-bold tracking-wide"
+                placeholder="Search Products (Name/SKU)..."
               />
             </div>
             
@@ -136,25 +136,25 @@ const ProductsPage = () => {
               <select
                 value={statusFilter}
                 onChange={e => setStatusFilter(e.target.value)}
-                className="premium-input bg-slate-950/40 border-slate-800 text-[10px] font-black uppercase tracking-[0.2em] px-8 cursor-pointer hover:bg-slate-950/60 transition-all focus:ring-1 ring-sky-500/20"
+                className="premium-input bg-gray-50 border-gray-100 text-[10px] font-black uppercase tracking-[0.2em] px-8 cursor-pointer hover:bg-white transition-all text-gray-600"
               >
-                <option value="All">Operational Status: All</option>
-                <option value="active">Active Stream</option>
-                <option value="inactive">Suspended</option>
+                <option value="All">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
               </select>
               
               <select
                 value={categoryFilter}
                 onChange={e => setCategoryFilter(e.target.value)}
-                className="premium-input bg-slate-950/40 border-slate-800 text-[10px] font-black uppercase tracking-[0.2em] px-8 cursor-pointer hover:bg-slate-950/60 transition-all focus:ring-1 ring-sky-500/20"
+                className="premium-input bg-gray-50 border-gray-100 text-[10px] font-black uppercase tracking-[0.2em] px-8 cursor-pointer hover:bg-white transition-all text-gray-600"
               >
-                <option value="All">Segment: All</option>
-                <option value="Screen Protection">Optic Defense</option>
-                <option value="Cases & Covers">Armor System</option>
-                <option value="Audio">Acoustic Logic</option>
-                <option value="Cables & Chargers">Energy Flow</option>
-                <option value="Power">Core Power</option>
-                <option value="Accessories">Extras</option>
+                <option value="All">All Categories</option>
+                <option value="Screen Protection">Screen Guard</option>
+                <option value="Cases & Covers">Cases & Covers</option>
+                <option value="Audio">Earphones / Audio</option>
+                <option value="Cables & Chargers">Chargers & Cables</option>
+                <option value="Power">Power Banks</option>
+                <option value="Accessories">Accessories</option>
               </select>
             </div>
           </div>
@@ -169,89 +169,89 @@ const ProductsPage = () => {
             />
             <button 
               onClick={() => document.getElementById('bulkUpload').click()}
-              className="flex-1 xl:flex-none bg-white/[0.03] border border-white/10 text-slate-400 font-black px-10 py-5 rounded-[2rem] flex items-center justify-center gap-4 transition-all hover:bg-white/[0.08] hover:text-white uppercase tracking-[0.3em] text-[10px] group/bulk"
+              className="flex-1 xl:flex-none bg-gray-50 border border-gray-100 text-gray-400 font-black px-10 py-5 rounded-[2rem] flex items-center justify-center gap-4 transition-all hover:bg-white hover:text-gray-900 uppercase tracking-[0.3em] text-[10px] group/bulk shadow-sm"
             >
               <FiUpload size={22} className="text-sky-500 group-hover:-translate-y-1 transition-transform" /> 
-              Bulk Relay
+              Bulk Upload
             </button>
 
             <button 
               onClick={() => handleOpenModal()}
-              className="flex-1 xl:flex-none bg-sky-500 text-white font-black px-12 py-5 rounded-[2rem] shadow-[0_20px_40px_-10px_rgba(14,165,233,0.4)] flex items-center justify-center gap-4 transition-all active:scale-[0.98] uppercase tracking-[0.3em] text-[10px] relative overflow-hidden group/add"
+              className="flex-1 xl:flex-none bg-sky-500 text-white font-black px-12 py-5 rounded-[2rem] shadow-[0_20px_40px_rgba(14,165,233,0.3)] flex items-center justify-center gap-4 transition-all active:scale-[0.98] uppercase tracking-[0.3em] text-[10px] relative overflow-hidden group/add"
             >
               <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/add:animate-shimmer"></div>
               <FiPlus size={24} className="group-hover/add:rotate-90 transition-transform" /> 
-              Initiate Asset
+              Add Product
             </button>
           </div>
         </div>
       </div>
 
       {/* Asset Repository Table */}
-      <div className="glass-panel border-white/[0.03] rounded-[4rem] shadow-2xl overflow-hidden relative group bg-white/[0.01]">
+      <div className="bg-white border border-gray-100 rounded-[4rem] shadow-xl overflow-hidden relative group transition-all duration-700">
         <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/[0.03] text-[10px] text-slate-500 font-black uppercase tracking-[0.4em]">
-                <th className="px-12 py-10">Specification Portfolio</th>
-                <th className="px-12 py-10">Sector Branch</th>
-                <th className="px-12 py-10 text-right">Settlement Unit</th>
-                <th className="px-12 py-10 text-center">Volume Status</th>
-                <th className="px-12 py-10 text-center">Operational</th>
-                <th className="px-12 py-10 text-right">Management</th>
+              <tr className="bg-gray-50 text-[9px] text-gray-400 font-black uppercase tracking-[0.4em]">
+                <th className="px-6 md:px-12 py-6">Product Details</th>
+                <th className="hidden lg:table-cell px-12 py-10">Category</th>
+                <th className="px-6 md:px-12 py-6 text-right">Selling Price</th>
+                <th className="px-6 md:px-12 py-6 text-center">Stock</th>
+                <th className="hidden sm:table-cell px-12 py-10 text-center">Status</th>
+                <th className="px-6 md:px-12 py-6 text-right">Management</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.02]">
+            <tbody className="divide-y divide-gray-50">
               {products.map((p) => (
-                <tr key={p._id} className="hover:bg-white/[0.02] transition-all group/row">
-                  <td className="px-12 py-8 flex items-center gap-8">
-                    <div className="w-20 h-20 rounded-[2.5rem] bg-slate-900/60 border border-white/[0.05] flex items-center justify-center text-5xl group-hover/row:scale-110 transition-all duration-700 shadow-inner group-hover/row:rotate-3">
+                <tr key={p._id} className="hover:bg-gray-50 transition-all group/row">
+                  <td className="px-6 md:px-12 py-6 flex items-center gap-4 md:gap-8">
+                    <div className="w-12 h-12 md:w-20 md:h-20 rounded-[1.5rem] md:rounded-[2.5rem] bg-gray-50 border border-gray-100 flex items-center justify-center text-3xl md:text-5xl group-hover/row:scale-110 transition-all duration-700 shadow-inner group-hover/row:rotate-3 shadow-gray-200">
                       {p.emoji}
                     </div>
-                    <div>
-                      <p className="font-black text-slate-200 text-base tracking-wide uppercase">{p.name}</p>
-                      <div className="flex items-center gap-3 mt-2">
-                        <span className="text-[9px] font-mono text-sky-500 bg-sky-500/5 px-2.5 py-1 rounded-md border border-sky-500/10 font-black tracking-widest uppercase">SKU: {p.sku || 'ABSENT'}</span>
+                    <div className="min-w-0">
+                      <p className="font-black text-gray-800 text-xs md:text-base tracking-wide uppercase truncate max-w-[120px] md:max-w-none">{p.name}</p>
+                      <div className="flex items-center gap-3 mt-1 md:mt-2">
+                        <span className="text-[8px] md:text-[9px] font-mono text-sky-600 bg-sky-50 px-2 py-0.5 md:px-2.5 md:py-1 rounded-md border border-sky-100 font-black tracking-widest uppercase truncate max-w-[80px] md:max-w-none">SKU: {p.sku || 'N/A'}</span>
                       </div>
                     </div>
                   </td>
-                  <td className="px-12 py-8">
-                    <span className="text-[10px] font-black uppercase tracking-widest bg-white/[0.03] text-slate-400 border border-white/[0.05] px-5 py-2.5 rounded-[1.5rem] group-hover/row:bg-sky-500/10 group-hover/row:text-sky-400 transition-colors">{p.category}</span>
+                  <td className="hidden lg:table-cell px-12 py-8">
+                    <span className="text-[10px] font-black uppercase tracking-widest bg-gray-50 text-gray-400 border border-gray-100 px-5 py-2.5 rounded-[1.5rem] group-hover/row:bg-sky-50 group-hover/row:text-sky-600 transition-colors uppercase">{p.category}</span>
                   </td>
-                  <td className="px-12 py-8 text-right">
-                    <p className="font-black text-white text-xl tracking-tight">₹{p.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
-                    <p className="text-[9px] text-slate-600 font-black uppercase tracking-[0.2em] mt-1.5 opacity-60 group-hover/row:opacity-100 transition-opacity">Basis: ₹{p.costPrice}</p>
+                  <td className="px-6 md:px-12 py-6 text-right">
+                    <p className="font-black text-gray-900 text-base md:text-xl tracking-tight">₹{p.price.toLocaleString()}</p>
+                    <p className="hidden md:block text-[9px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1.5 opacity-60 group-hover/row:opacity-100 transition-opacity">Basis: ₹{p.costPrice}</p>
                   </td>
-                  <td className="px-12 py-8">
-                    <div className="flex flex-col items-center gap-3">
-                       <div className="flex items-center gap-4 bg-slate-950/40 px-5 py-2.5 rounded-[2rem] border border-white/[0.03]">
-                          <div className={`w-2.5 h-2.5 rounded-full ${p.stock <= p.minStockAlert ? 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.8)] animate-pulse' : 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]'}`}></div>
-                          <span className={`font-black text-base ${p.stock <= p.minStockAlert ? 'text-rose-500' : 'text-slate-300'}`}>{p.stock}</span>
+                  <td className="px-6 md:px-12 py-6">
+                    <div className="flex flex-col items-center gap-2 md:gap-3">
+                       <div className="flex items-center gap-3 md:gap-4 bg-gray-50 px-3 py-1.5 md:px-5 md:py-2.5 rounded-[1.5rem] md:rounded-[2rem] border border-gray-100 shadow-inner">
+                          <div className={`w-2 md:w-2.5 h-2 md:h-2.5 rounded-full ${p.stock <= p.minStockAlert ? 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)] animate-pulse' : 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]'}`}></div>
+                          <span className={`font-black text-xs md:text-base ${p.stock <= p.minStockAlert ? 'text-rose-500' : 'text-gray-700'}`}>{p.stock}</span>
                        </div>
-                       {p.stock <= p.minStockAlert && <span className="text-[9px] font-black text-rose-500 uppercase tracking-[0.4em] animate-pulse">Critical Depletion</span>}
+                       {p.stock <= p.minStockAlert && <span className="hidden md:block text-[9px] font-black text-rose-500 uppercase tracking-[0.4em] animate-pulse">Critical</span>}
                     </div>
                   </td>
-                  <td className="px-12 py-8 text-center">
+                  <td className="hidden sm:table-cell px-12 py-8 text-center">
                     <button 
                       onClick={() => toggleStatus(p._id)}
-                      className={`text-5xl transition-all duration-700 transform hover:scale-110 ${p.status === 'active' ? 'text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'text-slate-900 group-hover/row:text-slate-800'}`}
+                      className={`text-3xl md:text-5xl transition-all duration-700 transform hover:scale-110 ${p.status === 'active' ? 'text-emerald-500 drop-shadow-md' : 'text-gray-200 hover:text-gray-300'}`}
                     >
                       {p.status === 'active' ? <FiToggleRight /> : <FiToggleLeft />}
                     </button>
                   </td>
-                  <td className="px-12 py-8 text-right">
-                    <div className="flex items-center justify-end gap-4 opacity-0 group-hover/row:opacity-100 transition-all transform translate-x-4 group-hover/row:translate-x-0">
+                  <td className="px-6 md:px-12 py-6 text-right">
+                    <div className="flex items-center justify-end gap-3 md:gap-4 group-hover/row:translate-x-0">
                       <button 
                         onClick={() => handleOpenModal(p)}
-                        className="w-12 h-12 flex items-center justify-center rounded-[1.5rem] bg-white/[0.03] text-slate-500 hover:text-sky-400 hover:bg-sky-400/10 transition-all border border-transparent hover:border-sky-500/10 active:scale-95"
+                        className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-[1.5rem] bg-gray-50 text-gray-400 hover:text-sky-500 hover:bg-sky-50 transition-all border border-transparent hover:border-sky-100 active:scale-95"
                       >
-                        <FiEdit2 size={20} />
+                        <FiEdit2 size={18} />
                       </button>
                       <button 
                         onClick={() => deleteProduct(p._id)}
-                        className="w-12 h-12 flex items-center justify-center rounded-[1.5rem] bg-rose-500/5 text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 transition-all border border-transparent hover:border-rose-500/10 active:scale-95"
+                        className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-[1.5rem] bg-rose-50 text-rose-300 hover:text-rose-500 hover:bg-rose-100 transition-all border border-transparent hover:border-rose-100 active:scale-95"
                       >
-                        <FiTrash2 size={20} />
+                        <FiTrash2 size={18} />
                       </button>
                     </div>
                   </td>
@@ -260,10 +260,9 @@ const ProductsPage = () => {
             </tbody>
           </table>
           {!loading && products.length === 0 && (
-            <div className="py-40 text-center relative overflow-hidden">
-               <div className="absolute inset-0 bg-slate-950/20 backdrop-blur-sm -z-10"></div>
-               <FiPackage size={80} className="mx-auto text-slate-800 mb-8 opacity-20" />
-               <p className="text-slate-700 italic text-[12px] font-black uppercase tracking-[0.6em]">Zero Operational Assets Identified in Repository</p>
+            <div className="py-40 text-center relative overflow-hidden bg-gray-50">
+               <FiPackage size={80} className="mx-auto text-gray-200 mb-8" />
+               <p className="text-gray-400 italic text-[12px] font-black uppercase tracking-[0.6em]">Zero Operational Assets Identified in Repository</p>
             </div>
           )}
         </div>
@@ -271,23 +270,23 @@ const ProductsPage = () => {
 
       {/* Modal - Redesigned Modal with Ultra-Premium Look */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-2xl bg-slate-950/60 animate-in fade-in duration-500">
-          <div className="glass-panel border-white/10 w-full max-w-3xl rounded-[4rem] shadow-[0_0_150px_rgba(0,0,0,0.7)] overflow-hidden animate-slide-up relative">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-3xl bg-white/30 animate-in fade-in duration-500">
+          <div className="bg-white border border-gray-100 w-full max-w-3xl rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden animate-slide-up relative">
             <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${editingId ? 'from-sky-600 to-sky-400' : 'from-emerald-600 to-emerald-400'}`}></div>
             
-            <div className="p-12 border-b border-white/[0.03] flex items-center justify-between bg-white/[0.01]">
-              <h3 className="text-3xl font-black text-white tracking-tight flex items-center gap-6">
-                <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center text-2xl shadow-inner border transition-all duration-700 ${editingId ? 'bg-sky-500/10 text-sky-500 border-sky-500/10' : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10'}`}>
+            <div className="p-12 border-b border-gray-50 flex items-center justify-between bg-gray-50/20">
+              <h3 className="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-6">
+                <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center text-2xl shadow-inner border transition-all duration-700 ${editingId ? 'bg-sky-50 text-sky-500 border-sky-100' : 'bg-emerald-50 text-emerald-500 border-emerald-100'}`}>
                    {editingId ? <FiEdit2 /> : <FiPlus />}
                 </div>
                 <div className="flex flex-col">
-                  <span className="leading-none mb-1">{editingId ? 'Refine Asset' : 'Register Asset'}</span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-500">Core Repository Entry</span>
+                  <span className="leading-none mb-1">{editingId ? 'Edit Product' : 'Add New Product'}</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-400">Inventory Management</span>
                 </div>
               </h3>
               <button 
                 onClick={() => setShowModal(false)} 
-                className="w-14 h-14 rounded-2xl bg-white/[0.03] text-slate-600 hover:text-white flex items-center justify-center transition-all hover:rotate-90 text-3xl"
+                className="w-14 h-14 rounded-2xl bg-gray-100 text-gray-400 hover:text-gray-900 flex items-center justify-center transition-all hover:rotate-90 text-3xl"
               >
                 &times;
               </button>
@@ -295,37 +294,37 @@ const ProductsPage = () => {
 
             <form onSubmit={handleSubmit} className="p-12 grid grid-cols-1 md:grid-cols-2 gap-10">
               <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Architecture Designation</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Product Name</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  className="premium-input w-full py-5 px-8"
-                  placeholder="Asset Full Name"
+                  className="premium-input w-full py-5 px-8 bg-gray-50 border-gray-100 text-gray-900 font-bold"
+                  placeholder="e.g. iPhone 15 Case"
                 />
               </div>
               <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Visual Iconography</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Visual Iconography</label>
                 <div className="flex gap-4">
                   <input
                     type="text"
                     value={formData.emoji}
                     onChange={e => setFormData({ ...formData, emoji: e.target.value })}
-                    className="premium-input w-24 text-center text-3xl py-4"
+                    className="premium-input w-24 text-center text-3xl py-4 bg-gray-50 border-gray-100"
                   />
-                  <div className="flex-1 text-[9px] text-slate-500 font-bold uppercase py-2 leading-relaxed italic">
-                    Use standard OS symbols <br/>for identified asset.
+                  <div className="flex-1 text-[9px] text-gray-400 font-bold uppercase py-2 leading-relaxed italic">
+                    Select an emoji to <br/>represent this item.
                   </div>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Sector branch</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Category</label>
                 <select
                   value={formData.category}
                   onChange={e => setFormData({ ...formData, category: e.target.value })}
-                  className="premium-input w-full py-5 px-8 font-black uppercase tracking-[0.2em] text-xs cursor-pointer"
+                  className="premium-input w-full py-5 px-8 font-black uppercase tracking-[0.2em] text-xs cursor-pointer bg-gray-50 border-gray-100 text-gray-700"
                 >
                   <option>Screen Protection</option>
                   <option>Cases & Covers</option>
@@ -337,67 +336,67 @@ const ProductsPage = () => {
                 </select>
               </div>
               <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Unified SKU Code</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Unified SKU Code</label>
                 <input
                   type="text"
                   value={formData.sku}
                   onChange={e => setFormData({ ...formData, sku: e.target.value })}
-                  className="premium-input w-full font-mono font-bold py-5 px-8"
+                  className="premium-input w-full font-mono font-bold py-5 px-8 bg-gray-50 border-gray-100 text-sky-600"
                   placeholder="ID_GEN_SYSTEM_000"
                 />
               </div>
 
               <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Settlement Valuation (₹)</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Selling Price (₹)</label>
                 <input
                   type="number"
                   required
                   value={formData.price}
                   onChange={e => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                  className="premium-input w-full text-white font-black text-xl py-5 px-8 bg-sky-500/5 focus:bg-sky-500/10 border-sky-500/20"
+                  className="premium-input w-full text-gray-900 font-black text-xl py-5 px-8 bg-sky-50 border-sky-100"
                 />
               </div>
               <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Archive Cost (₹)</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Purchase Cost (₹)</label>
                 <input
                   type="number"
                   required
                   value={formData.costPrice}
                   onChange={e => setFormData({ ...formData, costPrice: parseFloat(e.target.value) || 0 })}
-                  className="premium-input w-full text-slate-600 font-bold py-5 px-8"
+                  className="premium-input w-full text-gray-600 font-bold py-5 px-8 bg-gray-50 border-gray-100"
                 />
               </div>
 
               <div className="space-y-4 text-center">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">Current Volume</label>
-                <div className="flex items-center gap-6 justify-center bg-slate-950/40 p-4 rounded-[2.5rem] border border-white/[0.03]">
-                  <button type="button" onClick={() => setFormData({...formData, stock: Math.max(0, formData.stock - 1)})} className="w-12 h-12 rounded-[1.2rem] bg-white/[0.03] hover:bg-white/[0.08] transition-all flex items-center justify-center text-slate-400 group/btn"><FiMinus /></button>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">Current Volume</label>
+                <div className="flex items-center gap-6 justify-center bg-gray-50 p-4 rounded-[2.5rem] border border-gray-100 shadow-inner">
+                  <button type="button" onClick={() => setFormData({...formData, stock: Math.max(0, formData.stock - 1)})} className="w-12 h-12 rounded-[1.2rem] bg-white border border-gray-100 hover:bg-gray-100 transition-all flex items-center justify-center text-gray-400 group/btn"><FiMinus /></button>
                   <input
                     type="number"
                     value={formData.stock}
                     onChange={e => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
-                    className="bg-transparent border-none text-3xl font-black text-white w-20 text-center focus:ring-0 p-0"
+                    className="bg-transparent border-none text-3xl font-black text-gray-900 w-20 text-center focus:ring-0 p-0"
                   />
-                  <button type="button" onClick={() => setFormData({...formData, stock: formData.stock + 1})} className="w-12 h-12 rounded-[1.2rem] bg-white/[0.03] hover:bg-white/[0.08] transition-all flex items-center justify-center text-slate-400 group/btn"><FiPlus /></button>
+                  <button type="button" onClick={() => setFormData({...formData, stock: formData.stock + 1})} className="w-12 h-12 rounded-[1.2rem] bg-white border border-gray-100 hover:bg-gray-100 transition-all flex items-center justify-center text-gray-400 group/btn"><FiPlus /></button>
                 </div>
               </div>
               <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Depletion Alert Node</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Depletion Alert Node</label>
                 <input
                   type="number"
                   value={formData.minStockAlert}
                   onChange={e => setFormData({ ...formData, minStockAlert: parseInt(e.target.value) || 5 })}
-                  className="premium-input w-full py-5 px-8 text-rose-500/60 font-black"
+                  className="premium-input w-full py-5 px-8 text-rose-500 font-black bg-gray-50 border-gray-100"
                 />
               </div>
 
               <div className="col-span-1 md:col-span-2 space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Assurance commitment Protocol</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Assurance commitment Protocol</label>
                 <input
                   type="text"
                   value={formData.warranty}
                   onChange={e => setFormData({ ...formData, warranty: e.target.value })}
-                  className="premium-input w-full py-5 px-8 text-sky-400 font-bold"
+                  className="premium-input w-full py-5 px-8 text-sky-600 font-bold bg-gray-50 border-gray-100"
                   placeholder="Temporal Guard Terms"
                 />
               </div>
@@ -406,16 +405,16 @@ const ProductsPage = () => {
                 <button 
                   type="button" 
                   onClick={() => setShowModal(false)} 
-                  className="flex-1 py-6 rounded-[2.5rem] text-xs font-black text-slate-600 hover:text-slate-300 transition-all uppercase tracking-[0.4em] border border-white/[0.03] hover:bg-white/[0.02]"
+                  className="flex-1 py-6 rounded-[2.5rem] text-xs font-black text-gray-400 hover:text-gray-900 transition-all uppercase tracking-[0.4em] border border-gray-100 hover:bg-gray-50"
                 >
                   Terminate
                 </button>
                 <button 
                   type="submit" 
-                  className={`flex-[2] py-6 rounded-[2.5rem] font-black active:scale-95 transition-all text-sm uppercase tracking-[0.5em] relative overflow-hidden group/final shadow-2xl ${editingId ? 'bg-sky-500 text-white shadow-sky-500/30' : 'bg-emerald-500 text-white shadow-emerald-500/30'}`}
+                  className={`flex-[2] py-6 rounded-[2.5rem] font-black active:scale-95 transition-all text-sm uppercase tracking-[0.5em] relative overflow-hidden group/final shadow-lg ${editingId ? 'bg-sky-500 text-white shadow-sky-500/30' : 'bg-emerald-500 text-white shadow-emerald-500/30'}`}
                 >
                   <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/final:animate-shimmer"></div>
-                  {editingId ? 'Modify Record' : 'Commit Entry'}
+                  {editingId ? 'Update Product' : 'Save Product'}
                 </button>
               </div>
             </form>
