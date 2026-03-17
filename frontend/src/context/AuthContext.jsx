@@ -5,9 +5,15 @@ import toast from 'react-hot-toast';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(
-    localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
-  );
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('userInfo');
+      return saved ? JSON.parse(saved) : null;
+    } catch (err) {
+      localStorage.removeItem('userInfo');
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

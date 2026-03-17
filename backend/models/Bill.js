@@ -26,7 +26,8 @@ const billSchema = new mongoose.Schema({
     qty: Number,
     price: Number,
     total: Number,
-    warranty: String
+    warranty: String,
+    imei: String
   }],
   subtotal: {
     type: Number,

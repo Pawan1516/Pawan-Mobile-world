@@ -3,7 +3,7 @@ import axios from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
 import { 
   FiSettings, FiSmartphone, FiMapPin, FiPhone, FiCreditCard, 
-  FiLayout, FiToggleLeft, FiToggleRight, FiPlus, FiTrash2, FiUser
+  FiLayout, FiToggleLeft, FiToggleRight, FiPlus, FiTrash2, FiUser, FiActivity, FiShield, FiCpu
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
@@ -96,7 +96,7 @@ const SettingsPage = () => {
     try {
       if (id) {
         const payload = { name, username, role };
-        if (password) payload.password = password; // only send if changing
+        if (password) payload.password = password;
         await axios.put(`/auth/users/${id}`, payload);
         toast.success('User updated!');
       } else {
@@ -169,186 +169,281 @@ const SettingsPage = () => {
     }
   };
 
-  if (loading || !settings) return null;
+  if (loading || !settings) return (
+    <div className="flex flex-col items-center justify-center py-40 gap-6">
+      <div className="w-16 h-16 border-4 border-sky-500/10 border-t-sky-500 rounded-full animate-spin"></div>
+      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 animate-pulse">Initializing Core Settings...</p>
+    </div>
+  );
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 animate-in fade-in duration-700">
-      {/* Shop Info Form */}
-      <div className="bg-[#121d30] border border-white/5 p-8 rounded-[2.5rem] shadow-xl">
-        <h3 className="text-sm font-black uppercase tracking-widest text-[#00d4ff] mb-8 flex items-center gap-2">
-          <FiSettings /> Shop Profile Configuration
-        </h3>
-        
-        <form onSubmit={handleUpdateSettings} className="space-y-6">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="col-span-2 md:col-span-1 space-y-1">
-              <label className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Shop Name</label>
-              <div className="relative group">
-                <FiSmartphone className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#00d4ff] transition-colors" />
-                <input
-                  type="text"
-                  value={settings.shopName}
-                  onChange={e => setSettings({ ...settings, shopName: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all font-bold"
-                />
+    <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 animate-slide-up font-outfit">
+      {/* Left Column: Core Architecture */}
+      <div className="xl:col-span-7 space-y-10">
+        <div className="glass-panel p-10 lg:p-12 rounded-[4rem] shadow-2xl relative overflow-hidden group border-white/[0.03]">
+          <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
+            <FiCpu size={180} />
+          </div>
+          
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 relative z-10">
+            <h3 className="text-2xl font-black text-white flex items-center gap-5 tracking-tight">
+              <div className="w-14 h-14 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-500 text-2xl shadow-inner border border-sky-500/10">
+                <FiSettings />
               </div>
-            </div>
-            <div className="col-span-2 md:col-span-1 space-y-1">
-              <label className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">GST Identification (GSTIN)</label>
-              <div className="relative group">
-                <FiCreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#00d4ff] transition-colors" />
-                <input
-                  type="text"
-                  value={settings.gstin}
-                  onChange={e => setSettings({ ...settings, gstin: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all font-bold"
-                />
-              </div>
-            </div>
-            <div className="col-span-2 md:col-span-1 space-y-1">
-              <label className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Contact Phone</label>
-              <div className="relative group">
-                <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#00d4ff] transition-colors" />
-                <input
-                  type="text"
-                  value={settings.phone}
-                  onChange={e => setSettings({ ...settings, phone: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all font-bold"
-                />
-              </div>
-            </div>
-            <div className="col-span-2 md:col-span-1 space-y-1">
-              <label className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">WhatsApp Number</label>
-              <div className="relative group">
-                <FiPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#00e676] transition-colors" />
-                <input
-                  type="text"
-                  value={settings.whatsapp}
-                  onChange={e => setSettings({ ...settings, whatsapp: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-[#00e676] focus:outline-none focus:border-[#00e676]/50 transition-all font-bold"
-                />
-              </div>
-            </div>
-            <div className="col-span-2 space-y-1">
-              <label className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Shop Address</label>
-              <div className="relative group">
-                <FiMapPin className="absolute left-4 top-4 text-white/20 group-focus-within:text-[#00d4ff] transition-colors" />
-                <textarea
-                  value={settings.address}
-                  onChange={e => setSettings({ ...settings, address: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all font-bold min-h-[80px]"
-                ></textarea>
-              </div>
+              System Architecture
+            </h3>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"></div>
+              <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.4em]">Node Configuration Master</span>
             </div>
           </div>
-
-          <div className="pt-6 border-t border-white/5 space-y-6">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20">System Behavior & Display</h4>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center justify-between p-4 bg-black/20 rounded-2xl border border-white/5">
-                <div>
-                   <p className="text-xs font-black text-white/60 uppercase">Auto-Stock Update</p>
-                   <p className="text-[10px] text-white/20">Decrement stock on new bills</p>
+          
+          <form onSubmit={handleUpdateSettings} className="space-y-10 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Enterprise Designation</label>
+                <div className="relative group/input">
+                  <FiSmartphone className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/input:text-sky-500 transition-colors" />
+                  <input
+                    type="text"
+                    value={settings.shopName}
+                    onChange={e => setSettings({ ...settings, shopName: e.target.value })}
+                    className="premium-input w-full pl-14 py-4.5 bg-slate-900/40 border-slate-800 text-sm font-bold"
+                  />
                 </div>
-                <button 
-                  type="button"
-                  onClick={() => setSettings({ ...settings, autoStockDecrement: !settings.autoStockDecrement })}
-                  className={`text-2xl transition-all ${settings.autoStockDecrement ? 'text-[#00d4ff]' : 'text-white/10'}`}
-                >
-                  {settings.autoStockDecrement ? <FiToggleRight /> : <FiToggleLeft />}
-                </button>
               </div>
-
-              <div className="flex items-center justify-between p-4 bg-black/20 rounded-2xl border border-white/5">
-                <div>
-                   <p className="text-xs font-black text-white/60 uppercase">GST Component</p>
-                   <p className="text-[10px] text-white/20">Include GST block on invoices</p>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Fiscal Identity (GSTIN)</label>
+                <div className="relative group/input">
+                  <FiCreditCard className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/input:text-sky-500 transition-colors" />
+                  <input
+                    type="text"
+                    value={settings.gstin}
+                    onChange={e => setSettings({ ...settings, gstin: e.target.value })}
+                    className="premium-input w-full pl-14 py-4.5 bg-slate-900/40 border-slate-800 text-sm font-black uppercase tracking-widest"
+                  />
                 </div>
-                <button 
-                  type="button"
-                  onClick={() => setSettings({ ...settings, showGSTOnBill: !settings.showGSTOnBill })}
-                  className={`text-2xl transition-all ${settings.showGSTOnBill ? 'text-[#00e676]' : 'text-white/10'}`}
-                >
-                  {settings.showGSTOnBill ? <FiToggleRight /> : <FiToggleLeft />}
-                </button>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Primary Voice Relay</label>
+                <div className="relative group/input">
+                  <FiPhone className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/input:text-sky-500 transition-colors" />
+                  <input
+                    type="text"
+                    value={settings.phone}
+                    onChange={e => setSettings({ ...settings, phone: e.target.value })}
+                    className="premium-input w-full pl-14 py-4.5 bg-slate-900/40 border-slate-800 text-sm font-bold"
+                  />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Digital Stream (WhatsApp)</label>
+                <div className="relative group/input">
+                  <FiPhone className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within/input:text-emerald-500 transition-colors" />
+                  <input
+                    type="text"
+                    value={settings.whatsapp}
+                    onChange={e => setSettings({ ...settings, whatsapp: e.target.value })}
+                    className="premium-input w-full pl-14 py-4.5 bg-slate-900/40 border-slate-800 text-sm font-black text-emerald-400"
+                  />
+                </div>
+              </div>
+              <div className="col-span-1 md:col-span-2 space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 ml-4">Physical Base Coordinates</label>
+                <div className="relative group/input">
+                  <FiMapPin className="absolute left-6 top-6 text-slate-500 group-focus-within/input:text-sky-500 transition-colors" />
+                  <textarea
+                    value={settings.address}
+                    onChange={e => setSettings({ ...settings, address: e.target.value })}
+                    className="premium-input w-full pl-14 py-5 bg-slate-900/40 border-slate-800 min-h-[140px] text-sm leading-relaxed"
+                  ></textarea>
+                </div>
               </div>
             </div>
 
-            <div className="space-y-1">
-               <label className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1 flex items-center gap-2">
-                 <FiLayout className="text-[#00d4ff]" /> Default PDF Theme
-               </label>
-               <div className="grid grid-cols-4 gap-2">
-                 {['blue', 'green', 'dark', 'orange'].map(theme => (
-                   <button
-                     key={theme}
-                     type="button"
-                     onClick={() => setSettings({ ...settings, pdfTheme: theme })}
-                     className={`
-                       py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all
-                       ${settings.pdfTheme === theme 
-                         ? 'bg-[#00d4ff]/10 border-[#00d4ff]/40 text-[#00d4ff]' 
-                         : 'bg-white/5 border-white/5 text-white/20 hover:text-white/40'}
-                     `}
-                   >
-                     {theme}
-                   </button>
-                 ))}
-               </div>
-            </div>
+            <div className="pt-10 border-t border-white/[0.03] space-y-10">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600 flex items-center gap-4">
+                <div className="w-1.5 h-1.5 rounded-full bg-sky-500"></div>
+                Protocol Behavioral Matrix
+              </h4>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-8 glass-card rounded-[2.5rem] flex items-center justify-between group hover:ring-2 ring-sky-500/20 transition-all border-transparent bg-white/[0.01]">
+                  <div>
+                     <p className="text-[12px] font-black text-slate-200 uppercase tracking-widest mb-1">Asset Syncing</p>
+                     <p className="text-[9px] text-slate-500 uppercase font-black tracking-widest leading-relaxed">Automated inventory<br/>decrement protocol</p>
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={() => setSettings({ ...settings, autoStockDecrement: !settings.autoStockDecrement })}
+                    className={`text-4xl transition-all duration-500 transform hover:scale-110 ${settings.autoStockDecrement ? 'text-sky-500 drop-shadow-[0_0_10px_rgba(14,165,233,0.4)]' : 'text-slate-800'}`}
+                  >
+                    {settings.autoStockDecrement ? <FiToggleRight /> : <FiToggleLeft />}
+                  </button>
+                </div>
 
-            <button
-              type="submit"
-              disabled={saving}
-              className="w-full bg-gradient-to-r from-[#004aaa] to-[#00d4ff] text-white font-black py-4 rounded-2xl shadow-xl shadow-[#00d4ff]/20 active:scale-95 transition-all flex items-center justify-center gap-2"
+                <div className="p-8 glass-card rounded-[2.5rem] flex items-center justify-between group hover:ring-2 ring-emerald-500/20 transition-all border-transparent bg-white/[0.01]">
+                  <div>
+                     <p className="text-[12px] font-black text-slate-200 uppercase tracking-widest mb-1">Fiscal Component</p>
+                     <p className="text-[9px] text-slate-500 uppercase font-black tracking-widest leading-relaxed">Integrated GST logic<br/>in digital manifests</p>
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={() => setSettings({ ...settings, showGSTOnBill: !settings.showGSTOnBill })}
+                    className={`text-4xl transition-all duration-500 transform hover:scale-110 ${settings.showGSTOnBill ? 'text-emerald-500 drop-shadow-[0_0_10px_rgba(16,185,129,0.4)]' : 'text-slate-800'}`}
+                  >
+                    {settings.showGSTOnBill ? <FiToggleRight /> : <FiToggleLeft />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                 <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-1">Manifest Chromatic Spectrum</label>
+                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                   {['blue', 'green', 'dark', 'orange'].map(theme => (
+                     <button
+                       key={theme}
+                       type="button"
+                       onClick={() => setSettings({ ...settings, pdfTheme: theme })}
+                       className={`
+                         py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.3em] transition-all border relative overflow-hidden group/theme
+                         ${settings.pdfTheme === theme 
+                           ? 'bg-sky-500 text-white border-transparent shadow-[0_15px_30px_-10px_rgba(14,165,233,0.5)] scale-105' 
+                           : 'bg-white/[0.02] border-white/[0.05] text-slate-500 hover:text-slate-300 hover:bg-white/[0.04]'}
+                       `}
+                     >
+                       <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/theme:animate-shimmer opacity-0 group-hover/theme:opacity-100 transition-opacity"></div>
+                       {theme === 'blue' && 'Ultramarine'}
+                       {theme === 'green' && 'Emerald'}
+                       {theme === 'dark' && 'Obsidian'}
+                       {theme === 'orange' && 'Amber'}
+                     </button>
+                   ))}
+                 </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={saving}
+                className="premium-btn w-full bg-sky-500 text-white font-black py-6 rounded-[2.5rem] shadow-[0_20px_50px_-10px_rgba(14,165,233,0.4)] active:scale-[0.98] transition-all flex items-center justify-center gap-4 uppercase tracking-[0.4em] text-sm relative overflow-hidden group/submit"
+              >
+                <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/submit:animate-shimmer"></div>
+                {saving ? (
+                  <div className="w-6 h-6 border-3 border-white/20 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    <FiShield size={22} className="group-hover/submit:rotate-12 transition-transform" /> 
+                    Commit System Configuration
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Provision Management Section */}
+        <div className="glass-panel p-10 lg:p-12 rounded-[4rem] shadow-2xl relative overflow-hidden group border-white/[0.03]">
+          <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity duration-700">
+            <FiLayout size={180} />
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 relative z-10">
+            <h3 className="text-2xl font-black text-white flex items-center gap-5 tracking-tight">
+              <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500 text-2xl shadow-inner border border-amber-500/10">
+                <FiLayout />
+              </div>
+              Provision Repository
+            </h3>
+            <button 
+              onClick={() => handleOpenServiceModal()}
+              className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 px-8 py-4 rounded-2xl border border-amber-500/10 text-[10px] font-black uppercase tracking-[0.3em] transition-all active:scale-95 shadow-xl shadow-amber-500/5"
             >
-              {saving ? 'SAVING...' : 'UPDATE SYSTEM SETTINGS'}
+              Initialize Template
             </button>
           </div>
-        </form>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+            {services.map(s => (
+              <div key={s._id} className="p-8 glass-card rounded-[2.5rem] flex items-center justify-between group/srv hover:ring-2 ring-amber-500/20 transition-all border-transparent bg-white/[0.01]">
+                <div>
+                  <p className="text-sm font-black text-slate-200 uppercase tracking-wide mb-2">{s.name}</p>
+                  <div className="flex items-center gap-3">
+                     <p className="text-xs text-amber-500 font-black tracking-tighter">₹{s.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                     <span className="w-1 h-3 border-l border-slate-800"></span>
+                     <p className="text-[9px] text-slate-600 uppercase font-black tracking-[0.2em]">{s.warranty}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 opacity-0 group-hover/srv:opacity-100 transition-all transform translate-x-4 group-hover/srv:translate-x-0">
+                  <button 
+                    onClick={() => handleOpenServiceModal(s)}
+                    className="w-11 h-11 flex items-center justify-center rounded-2xl bg-white/5 text-slate-500 hover:text-amber-500 transition-all border border-transparent hover:border-amber-500/10"
+                  >
+                    <FiSettings size={18} />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteService(s._id)}
+                    className="w-11 h-11 flex items-center justify-center rounded-2xl bg-rose-500/5 text-rose-500/40 hover:text-rose-500 transition-all border border-transparent hover:border-rose-500/10"
+                  >
+                    <FiTrash2 size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* User Management Section */}
-      <div className="space-y-8">
-        <div className="bg-[#121d30] border border-white/5 p-8 rounded-[2.5rem] shadow-xl">
-           <div className="flex items-center justify-between mb-8">
-              <h3 className="text-sm font-black uppercase tracking-widest text-[#00d4ff] flex items-center gap-2">
-                <FiUser /> User Account Management
+      {/* Right Column: Personnel & Status */}
+      <div className="xl:col-span-5 space-y-10">
+        <div className="glass-panel p-10 lg:p-12 rounded-[4rem] shadow-2xl relative overflow-hidden group border-white/[0.03]">
+           <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none group-hover:opacity-[0.04] transition-opacity duration-700">
+              <FiUser size={150} />
+           </div>
+           <div className="flex items-center justify-between mb-12 relative z-10">
+              <h3 className="text-2xl font-black text-white flex items-center gap-5 tracking-tight">
+                <div className="w-14 h-14 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-500 text-2xl shadow-inner border border-sky-500/10">
+                   <FiUser />
+                </div>
+                Access Clearance
               </h3>
               <button 
-                onClick={() => handleOpenUserModal()}
-                className="bg-[#00d4ff]/10 text-[#00d4ff] px-4 py-2 rounded-xl border border-[#00d4ff]/20 text-xs font-black uppercase tracking-tighter hover:bg-[#00d4ff]/20 transition-all flex items-center gap-2"
+                 onClick={() => handleOpenUserModal()}
+                 className="w-12 h-12 rounded-2xl bg-sky-500/10 text-sky-500 flex items-center justify-center hover:bg-sky-500/20 transition-all active:scale-95 border border-sky-500/10"
               >
-                <FiPlus /> New User
+                <FiPlus size={24} />
               </button>
            </div>
 
-           <div className="space-y-3">
+           <div className="space-y-6 relative z-10">
               {users.map(u => (
-                <div key={u._id} className="p-4 bg-black/20 rounded-2xl border border-white/5 flex items-center justify-between group hover:border-[#00d4ff]/20 transition-all">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/30 group-hover:text-[#00d4ff] transition-colors">
-                      <FiUser size={20} />
+                <div key={u._id} className="p-6 glass-card rounded-[2.5rem] flex items-center justify-between group/user hover:ring-2 ring-sky-500/30 transition-all border-transparent bg-white/[0.01]">
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 rounded-[1.5rem] bg-slate-900 border border-white/5 flex items-center justify-center text-slate-500 group-hover/user:text-sky-400 group-hover/user:scale-105 transition-all duration-500 shadow-inner">
+                      <FiUser size={28} />
                     </div>
                     <div>
-                      <p className="font-bold text-white/80">{u.name}</p>
-                      <p className="text-[10px] text-white/20 uppercase font-black">@{u.username} • {u.role}</p>
+                      <p className="font-black text-slate-200 uppercase tracking-wide text-sm">{u.name}</p>
+                      <div className="flex items-center gap-3 mt-1.5">
+                         <p className="text-[9px] text-slate-600 uppercase font-black tracking-[0.3em]">@{u.username}</p>
+                         <div className="w-1 h-1 rounded-full bg-slate-800"></div>
+                         <span className={`text-[8px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full ${u.role === 'admin' ? 'bg-sky-500/10 text-sky-400 border border-sky-500/10' : 'bg-slate-800 text-slate-500'}`}>
+                           {u.role}
+                         </span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-3 opacity-0 group-hover/user:opacity-100 transition-all transform scale-90 group-hover/user:scale-100">
                     <button 
                       onClick={() => handleOpenUserModal(u)}
-                      className="p-2.5 rounded-xl bg-white/5 text-white/40 hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all"
+                      className="w-11 h-11 flex items-center justify-center rounded-2xl bg-white/5 text-slate-500 hover:text-sky-400 transition-all border border-transparent hover:border-sky-500/10"
                     >
-                      <FiSettings size={16} />
+                      <FiSettings size={18} />
                     </button>
                     {u.username !== 'admin' && (
                       <button 
                         onClick={() => handleDeleteUser(u._id)}
-                        className="p-2.5 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all"
+                        className="w-11 h-11 flex items-center justify-center rounded-2xl bg-rose-500/5 text-rose-500/40 hover:text-rose-500 transition-all border border-transparent hover:border-rose-500/10"
                       >
-                        <FiTrash2 size={16} />
+                        <FiTrash2 size={18} />
                       </button>
                     )}
                   </div>
@@ -357,154 +452,127 @@ const SettingsPage = () => {
            </div>
         </div>
 
-        <div className="bg-gradient-to-br from-[#1a3050] to-[#121d30] border border-white/5 p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden group">
-           <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-[#00d4ff]/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
-           <h3 className="text-sm font-black uppercase tracking-widest text-white/40 mb-4">System Information</h3>
-           <div className="space-y-3 relative z-10">
-              <div className="flex justify-between text-xs">
-                <span className="text-white/20">API Endpoint</span>
-                <span className="text-white/40 font-mono italic">/api/v1.0</span>
+        <div className="glass-panel p-10 lg:p-12 rounded-[4rem] shadow-2xl relative overflow-hidden group border-white/[0.03] bg-white/[0.01]">
+           <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-sky-500/5 rounded-full blur-[100px] group-hover:scale-125 transition-transform duration-[3000ms]"></div>
+           <div className="flex items-center gap-5 mb-10">
+              <div className="w-12 h-12 rounded-2xl bg-slate-900/50 flex items-center justify-center text-sky-500 shadow-inner">
+                 <FiActivity size={24} />
               </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-white/20">DB Cluster</span>
-                <span className="text-white/40 font-mono italic">Local Instance</span>
+              <div>
+                 <h4 className="text-[11px] font-black uppercase tracking-[0.5em] text-slate-300">Architecture Health</h4>
+                 <p className="text-[9px] text-slate-600 uppercase font-black tracking-widest mt-1">Real-time status analysis</p>
               </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-white/20">Last Backup</span>
-                <span className="text-white/40 font-mono italic">Yesterday, 14:30</span>
+           </div>
+           
+           <div className="space-y-6 relative z-10">
+              <div className="flex justify-between items-center px-2">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Protocol Iteration</span>
+                <span className="text-[10px] text-sky-400 font-mono font-black tracking-tighter bg-sky-500/5 px-4 py-1.5 rounded-full border border-sky-500/10">CORE_V1.3.5_STABLE</span>
               </div>
-               <div className="flex justify-between text-xs pt-3 border-t border-white/5">
-                 <span className="text-white/20">Environment</span>
-                 <span className="text-[#00e676] font-black uppercase tracking-widest text-[9px]">Production Optimized</span>
+              <div className="flex justify-between items-center px-2 border-t border-white/[0.03] pt-6">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Processing Node</span>
+                <span className="text-[10px] text-slate-400 font-mono font-black tracking-tighter">DIST_RELAY_NODE_AX7</span>
+              </div>
+              <div className="flex justify-between items-center px-2 border-t border-white/[0.03] pt-6">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Temporal Alignment</span>
+                <span className="text-[10px] text-emerald-400 font-mono font-black tracking-tighter">SYNCHRONIZED_0.00ms</span>
+              </div>
+               <div className="pt-10 border-t border-white/[0.05] flex items-center justify-center gap-4 group/status">
+                 <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.8)] animate-pulse group-hover:scale-125 transition-transform"></div>
+                 <span className="text-emerald-500 font-black uppercase tracking-[0.5em] text-[10px]">System Optimized & Live</span>
                </div>
             </div>
          </div>
-       </div>
-
-      {/* Service Management Section */}
-      <div className="bg-[#121d30] border border-white/5 p-8 rounded-[2.5rem] shadow-xl xl:col-span-2">
-         <div className="flex items-center justify-between mb-8">
-            <h3 className="text-sm font-black uppercase tracking-widest text-[#00d4ff] flex items-center gap-2">
-              <FiLayout /> Predefined Services & Repairs
-            </h3>
-            <button 
-              onClick={() => handleOpenServiceModal()}
-              className="bg-[#00d4ff]/10 text-[#00d4ff] px-4 py-2 rounded-xl border border-[#00d4ff]/20 text-xs font-black uppercase tracking-tighter hover:bg-[#00d4ff]/20 transition-all flex items-center gap-2"
-            >
-              <FiPlus /> New Service
-            </button>
-         </div>
-
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {services.map(s => (
-              <div key={s._id} className="p-4 bg-black/20 rounded-2xl border border-white/5 flex items-center justify-between group hover:border-[#00d4ff]/20 transition-all">
-                <div>
-                  <p className="font-bold text-white/80">{s.name}</p>
-                  <p className="text-[10px] text-white/20 uppercase font-black">₹{s.price} • {s.warranty}</p>
-                </div>
-                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button 
-                    onClick={() => handleOpenServiceModal(s)}
-                    className="p-2 rounded-lg bg-white/5 text-white/40 hover:text-[#00d4ff] transition-all"
-                  >
-                    <FiSettings size={14} />
-                  </button>
-                  <button 
-                    onClick={() => handleDeleteService(s._id)}
-                    className="p-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all"
-                  >
-                    <FiTrash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))}
-         </div>
       </div>
 
-      {/* User Modal */}
+      {/* Modals are remains the same functionality but with improved styling */}
       {showUserModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-md bg-black/60 animate-in fade-in duration-300">
-          <div className="bg-[#121d30] border border-white/10 w-full max-w-md rounded-[3rem] shadow-2xl overflow-hidden animate-in slide-in-from-bottom-8 duration-500">
-            <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
-              <h3 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
-                <FiUser className="text-[#00d4ff]" />
-                {userFormData.id ? 'Edit User' : 'Add New User'}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-2xl bg-slate-950/60 animate-in fade-in duration-500">
+          <div className="glass-panel border-white/10 w-full max-w-lg rounded-[4rem] shadow-[0_0_120px_rgba(0,0,0,0.6)] overflow-hidden animate-slide-up relative">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-sky-600 to-sky-400"></div>
+            <div className="p-12 border-b border-white/[0.03] flex items-center justify-between bg-white/[0.01]">
+              <h3 className="text-2xl font-black text-white tracking-tight flex items-center gap-5">
+                <div className="w-12 h-12 rounded-[1.2rem] bg-sky-500/10 flex items-center justify-center text-sky-500 shadow-inner">
+                   <FiUser />
+                </div>
+                {userFormData.id ? 'Refine Operator' : 'Enroll Operator'}
               </h3>
               <button 
                 type="button" 
                 onClick={() => setShowUserModal(false)}
-                className="w-10 h-10 rounded-full bg-white/5 text-white/40 hover:text-white flex items-center justify-center transition-colors"
+                className="w-12 h-12 rounded-2xl bg-white/[0.03] text-slate-600 hover:text-white flex items-center justify-center transition-all hover:rotate-90 text-2xl"
                >
-                ×
+                &times;
               </button>
             </div>
 
-            <form onSubmit={handleSaveUser} className="p-8 space-y-5">
-              <div className="space-y-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Full Name</label>
+            <form onSubmit={handleSaveUser} className="p-12 space-y-8">
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Full Legal Name</label>
                 <input
                   type="text"
                   required
                   value={userFormData.name}
                   onChange={e => setUserFormData({ ...userFormData, name: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
-                  placeholder="E.g. John Doe"
+                  className="premium-input w-full py-5 px-8"
+                  placeholder="Designate Name"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Username</label>
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">System Identity Code</label>
                 <input
                   type="text"
                   required
                   value={userFormData.username}
                   onChange={e => setUserFormData({ ...userFormData, username: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
-                  placeholder="johndoe123"
+                  className="premium-input w-full font-mono font-bold py-5 px-8"
+                  placeholder="operative_alias"
                   readOnly={userFormData.username === 'admin' && userFormData.id}
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">
-                  Password {userFormData.id && <span className="text-white/40 lowercase tracking-normal font-normal">(Leave blank to keep current)</span>}
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">
+                  Access Credential {userFormData.id && <span className="text-slate-700 italic lowercase tracking-normal font-normal ml-2 font-mono">(Null for Persistence)</span>}
                 </label>
                 <input
                   type="password"
                   required={!userFormData.id}
                   value={userFormData.password}
                   onChange={e => setUserFormData({ ...userFormData, password: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
-                  placeholder="••••••••"
+                  className="premium-input w-full py-5 px-8"
+                  placeholder="••••••••••••"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Role</label>
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Clearance Specification</label>
                 <select
                   value={userFormData.role}
                   onChange={e => setUserFormData({ ...userFormData, role: e.target.value })}
                   disabled={userFormData.username === 'admin'}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
+                  className="premium-input w-full py-5 px-8 font-black uppercase tracking-widest text-xs cursor-pointer"
                 >
-                  <option value="staff">Staff</option>
-                  <option value="admin">Admin</option>
+                  <option value="staff">Standard Operative (Staff)</option>
+                  <option value="admin">System Architect (Admin)</option>
                 </select>
               </div>
 
-              <div className="pt-4 flex justify-end gap-3">
+              <div className="pt-10 flex gap-6">
                  <button 
-                   type="button" 
-                   onClick={() => setShowUserModal(false)}
-                   className="px-6 py-3 rounded-2xl text-sm font-bold text-white/40 hover:text-white transition-colors"
+                    type="button" 
+                    onClick={() => setShowUserModal(false)}
+                    className="flex-1 py-5 rounded-[2rem] text-xs font-black text-slate-600 hover:text-slate-300 transition-all uppercase tracking-[0.3em] border border-white/[0.03] hover:bg-white/[0.02]"
                  >
-                   CANCEL
+                    Abstain
                  </button>
                  <button 
-                   type="submit" 
-                   className="bg-gradient-to-r from-[#004aaa] to-[#00d4ff] text-white px-8 py-3 rounded-2xl font-black shadow-xl shadow-[#00d4ff]/20 active:scale-95 transition-all"
+                    type="submit" 
+                    className="flex-[2] bg-sky-500 text-white py-5 rounded-[2rem] font-black shadow-[0_15px_30px_-10px_rgba(14,165,233,0.4)] active:scale-95 transition-all text-xs uppercase tracking-[0.4em] relative overflow-hidden group/btn"
                  >
-                   SAVE USER
+                    <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/btn:animate-shimmer"></div>
+                    Authorize Clearance
                  </button>
               </div>
             </form>
@@ -512,97 +580,101 @@ const SettingsPage = () => {
         </div>
       )}
 
-      {/* Service Modal */}
       {showServiceModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-md bg-black/60 animate-in fade-in duration-300">
-          <div className="bg-[#121d30] border border-white/10 w-full max-w-md rounded-[3rem] shadow-2xl overflow-hidden animate-in slide-in-from-bottom-8 duration-500">
-            <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
-              <h3 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
-                <FiLayout className="text-[#00d4ff]" />
-                {serviceFormData.id ? 'Edit Service' : 'Add New Service'}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-2xl bg-slate-950/60 animate-in fade-in duration-500">
+          <div className="glass-panel border-white/10 w-full max-w-lg rounded-[4rem] shadow-[0_0_120px_rgba(0,0,0,0.6)] overflow-hidden animate-slide-up relative">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-600 to-amber-400"></div>
+            <div className="p-12 border-b border-white/[0.03] flex items-center justify-between bg-white/[0.01]">
+              <h3 className="text-2xl font-black text-white tracking-tight flex items-center gap-5">
+                <div className="w-12 h-12 rounded-[1.2rem] bg-amber-500/10 flex items-center justify-center text-amber-500 shadow-inner">
+                   <FiLayout />
+                </div>
+                {serviceFormData.id ? 'Refine Provision' : 'Define Provision'}
               </h3>
               <button 
                 type="button" 
                 onClick={() => setShowServiceModal(false)}
-                className="w-10 h-10 rounded-full bg-white/5 text-white/40 hover:text-white flex items-center justify-center transition-colors"
+                className="w-12 h-12 rounded-2xl bg-white/[0.03] text-slate-600 hover:text-white flex items-center justify-center transition-all hover:rotate-90 text-2xl"
                >
-                ×
+                &times;
               </button>
             </div>
 
-            <form onSubmit={handleSaveService} className="p-8 space-y-5">
-              <div className="space-y-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Service Name</label>
+            <form onSubmit={handleSaveService} className="p-12 space-y-8">
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Provision Designation</label>
                 <input
                   type="text"
                   required
                   value={serviceFormData.name}
                   onChange={e => setServiceFormData({ ...serviceFormData, name: e.target.value })}
-                  className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
-                  placeholder="E.g. Screen Replacement"
+                  className="premium-input w-full py-5 px-8"
+                  placeholder="Service Descriptor"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Selling Price (₹)</label>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Market Valuation (₹)</label>
                   <input
                     type="number"
                     required
                     value={serviceFormData.price}
                     onChange={e => setServiceFormData({ ...serviceFormData, price: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
+                    className="premium-input w-full text-amber-500 font-extrabold text-lg py-5 px-8"
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Cost Price (₹)</label>
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Internal Burden (₹)</label>
                   <input
                     type="number"
                     value={serviceFormData.costPrice}
                     onChange={e => setServiceFormData({ ...serviceFormData, costPrice: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
+                    className="premium-input w-full text-slate-600 font-bold py-5 px-8"
                   />
                 </div>
               </div>
 
-                <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Category</label>
-                  <select
-                    value={serviceFormData.category}
-                    onChange={e => setServiceFormData({ ...serviceFormData, category: e.target.value })}
-                    className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
-                  >
-                    <option value="Repair">Repair</option>
-                    <option value="Service">Service</option>
-                    <option value="Installation">Installation</option>
-                    <option value="Software">Software</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-[#00d4ff] ml-1">Warranty</label>
-                  <input
-                    type="text"
-                    value={serviceFormData.warranty}
-                    onChange={e => setServiceFormData({ ...serviceFormData, warranty: e.target.value })}
-                    className="w-full bg-black/30 border border-white/5 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-[#00d4ff]/50"
-                    placeholder="E.g. 6 Months"
-                  />
-                </div>
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Operational Category</label>
+                <select
+                  value={serviceFormData.category}
+                  onChange={e => setServiceFormData({ ...serviceFormData, category: e.target.value })}
+                  className="premium-input w-full py-5 px-8 font-black uppercase tracking-widest text-xs cursor-pointer"
+                >
+                  <option value="Repair">Technical Repair</option>
+                  <option value="Service">Routine Service</option>
+                  <option value="Installation">Module Installation</option>
+                  <option value="Software">Software Protocol</option>
+                  <option value="Other">Miscellaneous</option>
+                </select>
+              </div>
 
-              <div className="pt-4 flex justify-end gap-3">
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600 ml-4">Assurance commitment</label>
+                <input
+                  type="text"
+                  value={serviceFormData.warranty}
+                  onChange={e => setServiceFormData({ ...serviceFormData, warranty: e.target.value })}
+                  className="premium-input w-full py-5 px-8 text-sky-400 font-bold"
+                  placeholder="Temporal Guard Protocol"
+                />
+              </div>
+
+              <div className="pt-10 flex gap-6">
                  <button 
-                   type="button" 
-                   onClick={() => setShowServiceModal(false)}
-                   className="px-6 py-3 rounded-2xl text-sm font-bold text-white/40 hover:text-white transition-colors"
+                    type="button" 
+                    onClick={() => setShowServiceModal(false)}
+                    className="flex-1 py-5 rounded-[2rem] text-xs font-black text-slate-600 hover:text-slate-300 transition-all uppercase tracking-[0.3em] border border-white/[0.03] hover:bg-white/[0.02]"
                  >
-                   CANCEL
+                    Abort
                  </button>
                  <button 
-                   type="submit" 
-                   className="bg-gradient-to-r from-[#004aaa] to-[#00d4ff] text-white px-8 py-3 rounded-2xl font-black shadow-xl shadow-[#00d4ff]/20 active:scale-95 transition-all"
+                    type="submit" 
+                    className="flex-[2] bg-amber-500 text-white py-5 rounded-[2rem] font-black shadow-[0_15px_30px_-10px_rgba(245,158,11,0.4)] active:scale-95 transition-all text-xs uppercase tracking-[0.4em] relative overflow-hidden group/btn"
                  >
-                   SAVE SERVICE
+                    <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover/btn:animate-shimmer"></div>
+                    Commit Provision
                  </button>
               </div>
             </form>
