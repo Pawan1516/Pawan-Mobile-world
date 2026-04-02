@@ -248,6 +248,7 @@ const BillingPage = () => {
                 className="premium-input bg-gray-50 border-gray-100 text-[10px] font-black uppercase tracking-[0.3em] px-10 cursor-pointer overflow-hidden max-w-[250px] text-gray-600"
               >
                 <option value="All">All Categories</option>
+                <option value="Mobiles">📱 Mobiles</option>
                 <option value="Screen Protection">Screen Guard</option>
                 <option value="Cases & Covers">Cases & Covers</option>
                 <option value="Cables & Chargers">Chargers & Cables</option>
@@ -286,6 +287,11 @@ const BillingPage = () => {
 
                       <div className="text-5xl mb-6 relative z-10 transform group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl">{product.emoji}</div>
                       <h4 className="text-[12px] font-black uppercase tracking-widest text-gray-800 line-clamp-1 mb-2 relative z-10">{product.name}</h4>
+                      {product.category === 'Mobiles' && product.mobileType && (
+                        <span className="text-[8px] font-black uppercase tracking-widest bg-violet-50 text-violet-500 border border-violet-100 px-2.5 py-1 rounded-lg mb-2 w-fit relative z-10">
+                          {product.mobileType === 'Android' ? '🤖' : product.mobileType === 'iPhone' ? '🍎' : product.mobileType === 'Feature Phone' ? '📟' : product.mobileType === 'Tablet' ? '📱' : '📲'} {product.mobileType}
+                        </span>
+                      )}
 
                       <div className="flex justify-between items-center mt-auto relative z-10 pt-4 border-t border-gray-50">
                         <div>

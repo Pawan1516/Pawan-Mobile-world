@@ -12,6 +12,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: [
+      'Mobiles',
       'Screen Protection',
       'Cases & Covers',
       'Cables & Chargers',
@@ -21,6 +22,11 @@ const productSchema = new mongoose.Schema({
       'Other'
     ],
     required: true
+  },
+  mobileType: {
+    type: String,
+    enum: ['Android', 'iPhone', 'Feature Phone', 'Tablet', 'Other Mobile', ''],
+    default: ''
   },
   price: {
     type: Number,

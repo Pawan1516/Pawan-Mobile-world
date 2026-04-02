@@ -19,7 +19,8 @@ const ProductsPage = () => {
     name: '', emoji: '📦', category: 'Accessories',
     price: 0, costPrice: 0, stock: 0, 
     minStockAlert: 5, supplier: '', sku: '', 
-    description: '', status: 'active', warranty: 'No Warranty'
+    description: '', status: 'active', warranty: 'No Warranty',
+    mobileType: ''
   });
 
   useEffect(() => {
@@ -47,7 +48,8 @@ const ProductsPage = () => {
         name: '', emoji: '📦', category: 'Accessories',
         price: 0, costPrice: 0, stock: 0, 
         minStockAlert: 5, supplier: '', sku: '', 
-        description: '', status: 'active', warranty: 'No Warranty'
+        description: '', status: 'active', warranty: 'No Warranty',
+        mobileType: ''
       });
     }
     setShowModal(true);
@@ -149,6 +151,7 @@ const ProductsPage = () => {
                 className="premium-input bg-gray-50 border-gray-100 text-[10px] font-black uppercase tracking-[0.2em] px-8 cursor-pointer hover:bg-white transition-all text-gray-600"
               >
                 <option value="All">All Categories</option>
+                <option value="Mobiles">📱 Mobiles</option>
                 <option value="Screen Protection">Screen Guard</option>
                 <option value="Cases & Covers">Cases & Covers</option>
                 <option value="Audio">Earphones / Audio</option>
@@ -216,7 +219,14 @@ const ProductsPage = () => {
                     </div>
                   </td>
                   <td className="hidden lg:table-cell px-12 py-8">
-                    <span className="text-[10px] font-black uppercase tracking-widest bg-gray-50 text-gray-400 border border-gray-100 px-5 py-2.5 rounded-[1.5rem] group-hover/row:bg-sky-50 group-hover/row:text-sky-600 transition-colors uppercase">{p.category}</span>
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-widest bg-gray-50 text-gray-400 border border-gray-100 px-5 py-2.5 rounded-[1.5rem] group-hover/row:bg-sky-50 group-hover/row:text-sky-600 transition-colors">{p.category}</span>
+                      {p.category === 'Mobiles' && p.mobileType && (
+                        <span className="text-[9px] font-black uppercase tracking-widest bg-violet-50 text-violet-500 border border-violet-100 px-4 py-1.5 rounded-[1rem] w-fit">
+                          {p.mobileType === 'Android' ? '🤖' : p.mobileType === 'iPhone' ? '🍎' : p.mobileType === 'Feature Phone' ? '📟' : p.mobileType === 'Tablet' ? '📱' : '📲'} {p.mobileType}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 md:px-12 py-6 text-right">
                     <p className="font-black text-gray-900 text-base md:text-xl tracking-tight">₹{p.price.toLocaleString()}</p>
@@ -326,6 +336,7 @@ const ProductsPage = () => {
                   onChange={e => setFormData({ ...formData, category: e.target.value })}
                   className="premium-input w-full py-5 px-8 font-black uppercase tracking-[0.2em] text-xs cursor-pointer bg-gray-50 border-gray-100 text-gray-700"
                 >
+                  <option>Mobiles</option>
                   <option>Screen Protection</option>
                   <option>Cases & Covers</option>
                   <option>Cables & Chargers</option>
@@ -335,6 +346,26 @@ const ProductsPage = () => {
                   <option>Other</option>
                 </select>
               </div>
+
+              {/* Mobile Type — shown only for Mobiles category */}
+              {formData.category === 'Mobiles' && (
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">📱 Mobile Type</label>
+                  <select
+                    value={formData.mobileType}
+                    onChange={e => setFormData({ ...formData, mobileType: e.target.value })}
+                    className="premium-input w-full py-5 px-8 font-black uppercase tracking-[0.2em] text-xs cursor-pointer bg-violet-50 border-violet-100 text-violet-700"
+                  >
+                    <option value="">Select Mobile Type</option>
+                    <option value="Android">🤖 Android</option>
+                    <option value="iPhone">🍎 iPhone / iOS</option>
+                    <option value="Feature Phone">📟 Feature Phone</option>
+                    <option value="Tablet">📱 Tablet</option>
+                    <option value="Other Mobile">📲 Other Mobile</option>
+                  </select>
+                </div>
+              )}
+
               <div className="space-y-4">
                 <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 ml-4">Unified SKU Code</label>
                 <input

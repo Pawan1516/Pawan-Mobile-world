@@ -180,15 +180,6 @@ export const generateBillPDF = (billData, settings, download = true) => {
   // 5. SIGNATURES & SEAL
   currentY += 25;
   
-  // Left: Customer Signature
-  doc.setFont('helvetica', 'normal');
-  doc.line(15, currentY - 5, 75, currentY - 5);
-  doc.setFont('helvetica', 'bold');
-  doc.text(customerName.toUpperCase(), 15, currentY);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.text("Customer's Signature", 15, currentY + 5);
-
   // Right: Authorised Signatory
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
