@@ -112,8 +112,29 @@ export const generateBillPDF = (billData, settings, download = true) => {
     allItems.push(['', '', '', '']);
   }
 
-  // Final Total Row as part of the table body
-  allItems.push(['', { content: 'Total', styles: { fontStyle: 'bold', halign: 'right' } }, '', { content: total.toFixed(2), styles: { fontStyle: 'bold', halign: 'right' } }]);
+  // Show Subtotal + Discount + Total breakdown if discount applied
+  if (discount > 0) {
+    allItems.push([
+      '',
+      { content: 'Subtotal', styles: { fontStyle: 'normal', halign: 'right', textColor: [100, 100, 100] } },
+      '',
+      { content: subtotal.toFixed(2), styles: { halign: 'right', textColor: [100, 100, 100] } }
+    ]);
+    allItems.push([
+      '',
+      { content: 'Discount', styles: { fontStyle: 'bold', halign: 'right', textColor: [200, 0, 0] } },
+      '',
+      { content: `- ${discount.toFixed(2)}`, styles: { fontStyle: 'bold', halign: 'right', textColor: [200, 0, 0] } }
+    ]);
+  }
+
+  // Final Net Total Row
+  allItems.push([
+    '',
+    { content: 'Total', styles: { fontStyle: 'bold', halign: 'right' } },
+    '',
+    { content: total.toFixed(2), styles: { fontStyle: 'bold', halign: 'right' } }
+  ]);
 
   autoTable(doc, {
     startY: currentY,
