@@ -6,11 +6,10 @@ const {
   createBill,
   exportCSV
 } = require('../controllers/billController');
-const { protect, adminOnly } = require('../middleware/auth');
 
-router.get('/', protect, adminOnly, getBills);
-router.get('/export/csv', protect, adminOnly, exportCSV);
+router.get('/', getBills);
+router.get('/export/csv', exportCSV);
 router.get('/:id', getBillById);
-router.post('/', protect, createBill);
+router.post('/', createBill);
 
 module.exports = router;

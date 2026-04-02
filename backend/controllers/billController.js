@@ -51,7 +51,7 @@ const createBill = async (req, res) => {
   const {
     customerName, customerPhone, customerEmail,
     items, subtotal, discount, gstPercent,
-    gstAmount, total, paymentMode, notes, pdfTheme
+    gstAmount, total, paymentMode, notes, pdfTheme, createdAt
   } = req.body;
 
   if (!items || items.length === 0) {
@@ -77,7 +77,8 @@ const createBill = async (req, res) => {
     paymentMode,
     notes,
     pdfTheme,
-    createdBy: req.user._id
+    createdAt: createdAt || new Date(),
+    createdBy: req.user ? req.user._id : null
   });
 
   if (bill) {
